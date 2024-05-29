@@ -36,7 +36,7 @@ local function extend_hitboxes()
             if enemyPly == local_player then continue end
             local player_character = enemyPly.Character
             if not player_character then continue end
-            if player_character.Humanoid.Health < 1 then continue end
+            --if not player_character:findFirstChild("Humanoid") then continue end
             local player_humanoid_root_part = player_character:FindFirstChild("HumanoidRootPart")
             if not player_humanoid_root_part then continue end
 
