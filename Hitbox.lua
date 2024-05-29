@@ -3,42 +3,91 @@ local UserInputService = game:GetService("UserInputService")
 local local_player = players.LocalPlayer
 local run_service = game:GetService("RunService")
 local starter_gui = game:GetService("StarterGui")
+local whitelist = {"Vault8221","DreamKJF1","krytoi_loxloxov"}
 local blacklist = {"MASTERANASVET"}
 local enabled = true
-local HBE_size = {8,8,8}
+local HBE_size = {X=8,Y=8,Z=8}
+local HBE_transparency = 0
 
-local function extend_hitboxes(delta_time)
-	if enabled == false then return end
-	local character = local_player.Character
-	if not character then return end
-	local humanoid_root_part = character:findFirstChild("HumanoidRootPart")
-	if not humanoid_root_part then return end
-	for _, enemyPlys in pairs(players:GetPlayers()) do
-		if enemyPlys == local_player then continue end
-		local player_character = enemyPlys.Character
-		if not player_character then continue end
-		local player_humanoid_root_part = player_character:findFirstChild("HumanoidRootPart")
-		if not player_humanoid_root_part then continue end
-		local are_touching = false
-		for _, part in pairs(workspace:GetPartsInPart(player_humanoid_root_part)) do
-			if part:IsDescendantOf(character) then
-				are_touching = true
+--[[local function extend_hitboxes()
+	if enabled == true then 
+		local character = local_player.Character
+		if not character then return end
+		local humanoid_root_part = character:findFirstChild("HumanoidRootPart")
+		if not humanoid_root_part then return end
+		for _,v in pairs(workspace:GetDescendants()) do
+			if v:FindFirstChild("HumanoidRootPart") then 
+				if v.Name == local_player.Name then return end
+				local player_humanoid_root_part = v:findFirstChild("HumanoidRootPart")
+				if not player_humanoid_root_part then return end
+				--if v.TeamColor ~= local_player.TeamColor then
+				player_humanoid_root_part.Size = Vector3.new(HBE_size.X,HBE_size.Y,HBE_size.Z)
+				player_humanoid_root_part.Transparency = HBE_transparency
+				player_humanoid_root_part.BrickColor = local_player.TeamColor
+				player_humanoid_root_part.Shape = Enum.PartType.Ball
+				player_humanoid_root_part.CanCollide = true
+				--end
+				if table.find(blacklist, v.Name) then
+					player_humanoid_root_part.Size = Vector3.new(HBE_size)
+					player_humanoid_root_part.Transparency = HBE_transparency
+					player_humanoid_root_part.BrickColor = v.TeamColor
+					player_humanoid_root_part.Shape = Enum.PartType.Ball
+					player_humanoid_root_part.CanCollide = true
+				end
+			end
+		end
+	else
+		for _,v in pairs(workspace:GetDescendants()) do
+			if v:FindFirstChild("HumanoidRootPart") then 
+				local player_humanoid_root_part = v:findFirstChild("HumanoidRootPart")
+				if not player_humanoid_root_part then return end
+				player_humanoid_root_part.Size = Vector3.new(2, 2, 1)
+				player_humanoid_root_part.Transparency = 1
+				player_humanoid_root_part.BrickColor = local_player.TeamColor
+				player_humanoid_root_part.Shape = Enum.PartType.Ball
+				player_humanoid_root_part.CanCollide = true
 				break
 			end
 		end
-		if enemyPlys.Team ~= local_player.Team or are_touching then
-			player_humanoid_root_part.Size = Vector3.new(HBE_size)
-			player_humanoid_root_part.Transparency = 1.00
-			player_humanoid_root_part.BrickColor = enemyPlys.Team.TeamColor
-			player_humanoid_root_part.Shape = Enum.PartType.Ball
-			player_humanoid_root_part.CanCollide = false continue 
+	end
+end]]
+
+local function extend_hitboxes()
+	if enabled == false then 
+		for _, enemyPlys in pairs(players:GetPlayers()) do
+			if enemyPlys.Name == local_player.Name then return end
+			if enemyPlys.Character:FindFirstChild("HumanoidRootPart") then 
+				local player_humanoid_root_part = enemyPlys.Character:findFirstChild("HumanoidRootPart")
+				if not player_humanoid_root_part then return end
+				if enemyPlys.Character.HumanoidRootPart.Transparency == 1 then return end
+				player_humanoid_root_part.Size = Vector3.new(2, 2, 1)
+				player_humanoid_root_part.Transparency = 1
+				player_humanoid_root_part.BrickColor = enemyPlys.TeamColor
+				player_humanoid_root_part.Shape = Enum.PartType.Ball
+				player_humanoid_root_part.CanCollide = true
+				break
+			end
 		end
-		if table.find(blacklist, enemyPlys.Name) then
-			player_humanoid_root_part.Size = Vector3.new(HBE_size)
-			player_humanoid_root_part.Transparency = 1
-			player_humanoid_root_part.BrickColor = enemyPlys.Team.TeamColor
-			player_humanoid_root_part.Shape = Enum.PartType.Ball
-			player_humanoid_root_part.CanCollide = true
+		return 
+	end
+	if enabled == true then 
+		local character = local_player.Character
+		if not character then return end
+		local humanoid_root_part = character:findFirstChild("HumanoidRootPart")
+		if not humanoid_root_part then return end
+		for _, enemyPlys in pairs(players:GetPlayers()) do
+			if enemyPlys.Name == local_player.Name then return end
+			if enemyPlys.Character:FindFirstChild("HumanoidRootPart") then 
+				local player_humanoid_root_part = enemyPlys.Character:findFirstChild("HumanoidRootPart")
+				if not player_humanoid_root_part then return end
+				if enemyPlys.TeamColor ~= local_player.TeamColor then
+				player_humanoid_root_part.Size = Vector3.new(HBE_size.X,HBE_size.Y,HBE_size.Z)
+				player_humanoid_root_part.Transparency = HBE_transparency
+				player_humanoid_root_part.BrickColor = enemyPlys.TeamColor
+				player_humanoid_root_part.Shape = Enum.PartType.Ball
+				player_humanoid_root_part.CanCollide = true
+				end
+			end
 		end
 	end
 end
@@ -68,6 +117,7 @@ local transparencyLabel = Instance.new("TextLabel")
 local transparencyBox = Instance.new("TextBox")
 --Properties:
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Frame.Parent = ScreenGui
@@ -195,7 +245,7 @@ sizeBox.FocusLost:connect(function()
 	local x,y,z = size:match("(%d+),(%d+),(%d+)")
 	if x and y and z then
 		sizeBox.Text = x..", "..y..", "..z
-		HBE_size = {x,y,z}
+		HBE_size = {X=x, Y=y, Z=z}
 		coroutine.resume(coroutine.create(function()
 			sizeBox.TextColor3 = Color3.new(0.333333, 0.666667, 0)
 			wait(2)
@@ -204,10 +254,23 @@ sizeBox.FocusLost:connect(function()
 	end
 end)
 
+transparencyBox.FocusLost:connect(function()
+	local Ttext = transparencyBox.Text
+	if Ttext then
+		transparencyBox.Text = Ttext
+		HBE_transparency = Ttext
+		coroutine.resume(coroutine.create(function()
+			transparencyBox.TextColor3 = Color3.new(0.333333, 0.666667, 0)
+			wait(2)
+			transparencyBox.TextColor3 = Color3.new(255, 255, 255)
+		end))
+	end
+end)
+
 
 run_service.Stepped:Connect(extend_hitboxes)
 
-sendNotification("Life in prison HitBox:", "Size 30", 20)
+sendNotification("Life in prison HitBox:", "some text later 😊", 20)
 
 players.PlayerAdded:connect(function(ply) if table.find(blacklist,ply.Name) then sendNotification("blacklist",ply.Name.." joined the server",30) end end)
 players.PlayerRemoving:connect(function(ply) if table.find(blacklist,ply.Name) then sendNotification("blacklist",ply.Name.." left the server",30) end end)
