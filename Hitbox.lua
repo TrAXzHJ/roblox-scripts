@@ -9,49 +9,6 @@ local enabled = true
 local HBE_size = {X=8,Y=8,Z=8}
 local HBE_transparency = 0
 
---[[local function extend_hitboxes()
-	if enabled == true then 
-		local character = local_player.Character
-		if not character then return end
-		local humanoid_root_part = character:findFirstChild("HumanoidRootPart")
-		if not humanoid_root_part then return end
-		for _,v in pairs(workspace:GetDescendants()) do
-			if v:FindFirstChild("HumanoidRootPart") then 
-				if v.Name == local_player.Name then return end
-				local player_humanoid_root_part = v:findFirstChild("HumanoidRootPart")
-				if not player_humanoid_root_part then return end
-				--if v.TeamColor ~= local_player.TeamColor then
-				player_humanoid_root_part.Size = Vector3.new(HBE_size.X,HBE_size.Y,HBE_size.Z)
-				player_humanoid_root_part.Transparency = HBE_transparency
-				player_humanoid_root_part.BrickColor = local_player.TeamColor
-				player_humanoid_root_part.Shape = Enum.PartType.Ball
-				player_humanoid_root_part.CanCollide = true
-				--end
-				if table.find(blacklist, v.Name) then
-					player_humanoid_root_part.Size = Vector3.new(HBE_size)
-					player_humanoid_root_part.Transparency = HBE_transparency
-					player_humanoid_root_part.BrickColor = v.TeamColor
-					player_humanoid_root_part.Shape = Enum.PartType.Ball
-					player_humanoid_root_part.CanCollide = true
-				end
-			end
-		end
-	else
-		for _,v in pairs(workspace:GetDescendants()) do
-			if v:FindFirstChild("HumanoidRootPart") then 
-				local player_humanoid_root_part = v:findFirstChild("HumanoidRootPart")
-				if not player_humanoid_root_part then return end
-				player_humanoid_root_part.Size = Vector3.new(2, 2, 1)
-				player_humanoid_root_part.Transparency = 1
-				player_humanoid_root_part.BrickColor = local_player.TeamColor
-				player_humanoid_root_part.Shape = Enum.PartType.Ball
-				player_humanoid_root_part.CanCollide = true
-				break
-			end
-		end
-	end
-end]]
-
 local function extend_hitboxes()
 	if enabled == false then 
 		for _, enemyPlys in pairs(players:GetPlayers()) do
