@@ -31,7 +31,7 @@ local function extend_hitboxes()
 		return 
 	end
 	if enabled == true then
-		if not local_player.Character:findFirstChild("HumanoidRootPart") then return end
+	        if not local_player.Character:findFirstChild("HumanoidRootPart") then return end
 		for _, enemyPly in pairs(players:GetPlayers()) do
             if enemyPly == local_player then continue end
             local player_character = enemyPly.Character
@@ -191,8 +191,7 @@ transparencyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 transparencyBox.TextScaled = true
 transparencyBox.TextSize = 14.000
 transparencyBox.TextWrapped = true
-
-
+-- Scripts:
 
 statusButton.MouseButton1Down:connect(function()
 	if statusButton.Text == "ON" then statusButton.Text = "OFF" enabled = false else statusButton.Text = "ON" enabled = true end
