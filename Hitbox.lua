@@ -47,7 +47,7 @@ local function extend_hitboxes()
 			if table.find(whitelist, enemyPly.Name) then continue end
 			if enemyPly.Name == local_player.Name then continue end
 			if enemyPly.TeamColor == local_player.TeamColor then continue end
-			local player_character = enemyPly
+			local player_character = enemyPly.Character
 			if not player_character then continue end
 			local player_humanoid_root_part,player_humanoid = player_character:FindFirstChild("HumanoidRootPart"), player_character:FindFirstChild("Humanoid")
 			if not player_humanoid_root_part or not player_humanoid then continue end
