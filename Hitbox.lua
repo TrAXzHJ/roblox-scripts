@@ -1,5 +1,5 @@
 if _G.HBE_LOADED == true then
-	 --error("HitBox Expander is already running!", 0)
+	--error("HitBox Expander is already running!", 0)
 	return
 end
 _G.HBE_LOADED = true
@@ -35,11 +35,9 @@ local function extend_hitboxes()
 	if enabled == false then 
 		for _, enemyPly in pairs(players:GetPlayers()) do
 			if enemyPly.Name == local_player.Name then continue end
-			if enemyPly.Character:FindFirstChild("HumanoidRootPart") then 
-				local player_humanoid_root_part = enemyPly.Character:findFirstChild("HumanoidRootPart")
-				if not player_humanoid_root_part then continue end
-				remove_hitbox(enemyPly)
-			end
+			local player_humanoid_root_part = enemyPly.Character:findFirstChild("HumanoidRootPart")
+			if not player_humanoid_root_part then continue end
+			remove_hitbox(enemyPly)
 		end
 		return 
 	end
@@ -49,12 +47,12 @@ local function extend_hitboxes()
 			if table.find(whitelist, enemyPly.Name) then continue end
 			if enemyPly.Name == local_player.Name then continue end
 			if enemyPly.TeamColor == local_player.TeamColor then continue end
-			local player_character = enemyPly.Character
+			local player_character = enemyPly
 			if not player_character then continue end
 			local player_humanoid_root_part,player_humanoid = player_character:FindFirstChild("HumanoidRootPart"), player_character:FindFirstChild("Humanoid")
-			if not player_humanoid_root_part or player_humanoid then continue end
+			if not player_humanoid_root_part or not player_humanoid then continue end
 			if player_humanoid.Health < 1 then remove_hitbox(enemyPly) continue end
-			
+
 			player_humanoid_root_part.Size = Vector3.new(HBE_size.X,HBE_size.Y,HBE_size.Z)
 			player_humanoid_root_part.Transparency = HBE_transparency
 			player_humanoid_root_part.BrickColor = enemyPly.TeamColor
@@ -569,7 +567,7 @@ for i,v in pairs(ScrollingFrame:GetChildren()) do
 end
 
 TextBox.FocusLost:connect(function()
-	if TextBox.Text == "" or TextBox.Text == " " then  return end
+	if TextBox.Text == "" or TextBox.Text == " " then return end
 	local key = TextBox.Text:lower()
 	hideKey = key
 end)
@@ -603,7 +601,7 @@ end)
 
 run_service.Stepped:Connect(extend_hitboxes)
 
-sendNotification("Life in prison HitBox:", "made by kjf", 20)
+sendNotification("Life in prison HitBox:", "some text later", 20)
 
 game:GetService("Players").LocalPlayer:GetMouse().KeyDown:connect(function(key)
 	if key == hideKey then
