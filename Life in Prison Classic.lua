@@ -1,10 +1,11 @@
 print('started')
 players = game:GetService("Players")
 tweenService = game:GetService("TweenService")
+starter_gui = game:GetService("StarterGui")
 localPlayer = players.LocalPlayer
 prefix = '.'
 
-library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Rain-Design/Unnamed/main/Library.lua'))()
+chat_opened = true
 
 teleportPos = {
 	quad = Vector3.new(-625, 43, 775),
@@ -31,7 +32,7 @@ teleportPos = {
 	back_yard = Vector3.new(-905, 104, -104),
 	prison_gate = Vector3.new(-520, 102, -24),
 	prison_bridge = Vector3.new(-240, 101, 3),
-
+	chinese_restaurant = Vector3.new(711, 32, 623)
 }
 
 
@@ -115,167 +116,215 @@ end
 
 tweenSpeed = 4
 
-commands = {
-	tomodel = function(speaker, arguments)
-		if arguments[1] then
-			for i,v in pairs(workspace:GetDescendants()) do
-				if v.Name:lower() == arguments[1]:lower() and v:IsA("Model") then
-					if speaker.Character:FindFirstChildOfClass('Humanoid') and speaker.Character:FindFirstChildOfClass('Humanoid').SeatPart then
-						speaker.Character:FindFirstChildOfClass('Humanoid').Sit = false
-						wait(.1)
-					end
-					local magnitude = (speaker.Character.PrimaryPart.Position - v:GetModelCFrame().p).magnitude
-					tweenSpeed = changeSpeed(magnitude)
-					tweenService:Create(getRoot(speaker.Character), TweenInfo.new(tweenSpeed, Enum.EasingStyle.Linear), {CFrame = v:GetModelCFrame()}):Play()
-				end
-			end
-		end
-	end,
-}
+--loadstring(game:HttpGet('https://raw.githubusercontent.com/Rain-Design/Unnamed/main/Library.lua'))()
+
+library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostDuckyy/UI-Libraries/main/Neverlose/source.lua"))()
 
 local Window = library:Window({
-	Text = "Aryan Classic For Life in Prison"
+	text = "Well well well"
 })
-local TeleportTab = Window:Tab({
-	Text = "Teleport"
+
+local TabSection = Window:TabSection({
+	text = "KJF Hub"
 })
+
+local LocalPlayerTab = TabSection:Tab({
+    text = "Local Player",
+    icon = "rbxassetid://7999345313",
+})
+local TeleportTab = TabSection:Tab({
+    text = "Teleports",
+    icon = "rbxassetid://7999345313",
+})
+local CreditsTab = TabSection:Tab({
+    text = "Credits",
+    icon = "rbxassetid://7999345313",
+})
+
+
+local Character = LocalPlayerTab:Section({
+	text = "LocalPlayer"
+})
+
 local Prison = TeleportTab:Section({
-	Text = "Prison"
+	text = "Prison"
 })
 local Town = TeleportTab:Section({
-	Text = "Town"
+	text = "Town"
 })
 local Weapon = TeleportTab:Section({
-	Text = "Weapon"
+	text = "Weapon"
+})
+
+
+Character:Button({
+	text = "BTools",
+	callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TrAXzHJ/roblox-scripts/refs/heads/main/Custom%20BTools.lua"))()
+	end
+})
+Character:Slider({
+    text = "Gravity",
+    min = 1,
+    max = 300,
+    callback = function(number)
+		workspace.Gravity = number
+    end
+})
+Character:Slider({
+    text = "FOV",
+    min = 1,
+    max = 120,
+    callback = function(number)
+		workspace.Camera.FieldOfView = number
+    end
+})
+Character:Keybind({
+    text = "Open/Close Chat",
+    default = Enum.KeyCode.Z,
+    callback = function(defaultBind)
+		chat_opened = not chat_opened
+		starter_gui:SetCore('ChatActive', chat_opened)
+    end
 })
 
 Prison:Button({
-	Text = "Yard",
-	Callback = function()
+	text = "Yard",
+	callback = function()
 		teleport('yard')
 	end
 })
 Prison:Button({
-	Text = "Back Yard",
-	Callback = function()
+	text = "Back Yard",
+	callback = function()
 		teleport('back_yard')
 	end
 })
 Prison:Button({
-	Text = "Kitchen",
-	Callback = function()
+	text = "Kitchen",
+	callback = function()
 		teleport('kitchen')
 	end
 })
 Prison:Button({
-	Text = "Cafeteria",
-	Callback = function()
+	text = "Cafeteria",
+	callback = function()
 		teleport('cafeteria')
 	end
 })
 Prison:Button({
-	Text = "Cells",
-	Callback = function()
+	text = "Cells",
+	callback = function()
 		teleport('cells')
 	end
 })
 Prison:Button({
-	Text = "Leaderboard",
-	Callback = function()
+	text = "Leaderboard",
+	callback = function()
 		teleport('leaderboard')
 	end
 })
 Prison:Button({
-	Text = "Nexus",
-	Callback = function()
+	text = "Nexus",
+	callback = function()
 		teleport('nexus')
 	end
 })
 Prison:Button({
-	Text = "Armory",
-	Callback = function()
+	text = "Armory",
+	callback = function()
 		teleport('prison_armory')
 	end
 })
 Prison:Button({
-	Text = "Prison Roof",
-	Callback = function()
+	text = "Prison Roof",
+	callback = function()
 		teleport('prison_roof')
 	end
 })
 Prison:Button({
-	Text = "Prison Gate",
-	Callback = function()
+	text = "Prison Gate",
+	callback = function()
 		teleport('prison_gate')
 	end
 })
 Prison:Button({
-	Text = "Prison Bridge",
-	Callback = function()
+	text = "Prison Bridge",
+	callback = function()
 		teleport('prison_bridge')
 	end
 })
 
 Town:Button({
-	Text = "Factory",
-	Callback = function()
+	text = "Factory",
+	callback = function()
 		teleport('quad')
 	end
 })
 Town:Button({
-	Text = "Criminal Base",
-	Callback = function()
+	text = "Criminal Base",
+	callback = function()
 		teleport('crimbase')
 	end
 })
 Town:Button({
-	Text = "Criminal Roof",
-	Callback = function()
+	text = "Criminal Roof",
+	callback = function()
 		teleport('crim_roof')
 	end
 })
 Town:Button({
-	Text = "Mountant",
-	Callback = function()
+	text = "Mountant",
+	callback = function()
 		teleport('mountant')
 	end
 })
 Town:Button({
-	Text = "City Armory",
-	Callback = function()
+	text = "City Armory",
+	callback = function()
 		teleport('city_armory')
 	end
 })
 Town:Button({
-	Text = "Secret House",
-	Callback = function()
+	text = "Secret House",
+	callback = function()
 		teleport('secret_house')
 	end
 })
 Town:Button({
-	Text = "Island",
-	Callback = function()
-		teleport('island_m79')
+	text = "Chinese restaurant",
+	callback = function()
+		teleport("chinese_restaurant")
 	end
 })
 
 Weapon:Button({
-	Text = "M60",
-	Callback = function()
+	text = "M60",
+	callback = function()
 		teleport('m60')
 	end
 })
 Weapon:Button({
-	Text = "AWM (Town)",
-	Callback = function()
+	text = "AWM (Prison)",
+	callback = function()
+		teleport('prison_armory')
+	end
+})
+Weapon:Button({
+	text = "AWM (Town)",
+	callback = function()
 		teleport('awm_town')
 	end
 })
 Weapon:Button({
-	Text = "Minigun",
-	Callback = function()
+	text = "Minigun",
+	callback = function()
 		teleport('minigun')
 	end
 })
-
-TeleportTab:Select()
+Weapon:Button({
+	text = "Thompson",
+	callback = function()
+		teleport('minigun')
+	end
+})
