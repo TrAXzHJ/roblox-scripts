@@ -2,12 +2,15 @@ print('started')
 players = game:GetService("Players")
 lighting = game:GetService("Lighting")
 tweenService = game:GetService("TweenService")
+runService = game:GetService("RunService")
 starter_gui = game:GetService("StarterGui")
 KJF_storage = game:FindFirstChild("KJF_storage") or Instance.new("Folder");KJF_storage.Name="KJF_storage"
 localPlayer = players.LocalPlayer
 prefix = '.'
 
 chat_opened = true
+fly_speed = 10
+CFloop = nil
 
 teleportPos = {
 	quad = Vector3.new(-625, 43, 775),
@@ -163,9 +166,9 @@ local Weapon = TeleportTab:AddSection({
 
 Character:AddSlider({
 	Name = "Gravity",
-	Min = 1,
+	Min = 0,
 	Max = 300,
-	Default = 196,
+	Default = 196.2,
 	Color = Color3.fromRGB(255,255,255),
 	Increment = 1,
 	ValueName = "gravity",
@@ -185,6 +188,54 @@ Character:AddSlider({
 		workspace.Camera.FieldOfView = number
 	end    
 })
+Character:AddSlider({
+	Name = "Fly Speed",
+	Min = 1,
+	Max = 300,
+	Default = 20,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Fly Speed",
+	Callback = function(number)
+		fly_speed = number
+	end    
+})
+FunSection:AddToggle({
+	Name = "Fly",
+	Default = false,
+	Callback = function(boolean)
+		if boolean then
+			if localPlayer.Character then
+				localPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = true
+				local Head = localPlayer.Character:WaitForChild("Head")
+				Head.Anchored = true
+				if CFloop then CFloop:Disconnect() end
+				CFloop = runService.Heartbeat:Connect(function(deltaTime)
+					if localPlayer.Character then
+						local moveDirection = localPlayer.Character:FindFirstChildOfClass('Humanoid').MoveDirection * (fly_speed * deltaTime)
+						local headCFrame = Head.CFrame
+						local cameraCFrame = workspace.CurrentCamera.CFrame
+						local cameraOffset = headCFrame:ToObjectSpace(cameraCFrame).Position
+						cameraCFrame = cameraCFrame * CFrame.new(-cameraOffset.X, -cameraOffset.Y, -cameraOffset.Z + 1)
+						local cameraPosition = cameraCFrame.Position
+						local headPosition = headCFrame.Position
+						local objectSpaceVelocity = CFrame.new(cameraPosition, Vector3.new(headPosition.X, cameraPosition.Y, headPosition.Z)):VectorToObjectSpace(moveDirection)
+						Head.CFrame = CFrame.new(headPosition) * (cameraCFrame - cameraPosition) * CFrame.new(objectSpaceVelocity)
+					end
+				end)
+			end
+		else
+			if CFloop then
+				CFloop:Disconnect()
+				if localPlayer.Character then
+					localPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+					local Head = localPlayer.Character:WaitForChild("Head")
+					Head.Anchored = false
+				end
+			end
+    	end
+	end    
+})
 Character:AddBind({
 	Name = "Open/Close Chat",
 	Default = Enum.KeyCode.Z,
@@ -198,7 +249,7 @@ Character:AddBind({
 FunSection:AddButton({
 	Name = "BTools!",
 	Callback = function()
-      		loadstring(game:HttpGet("https://raw.githubusercontent.com/TrAXzHJ/roblox-scripts/refs/heads/main/Custom%20BTools.lua"))()
+      	loadstring(game:HttpGet("https://raw.githubusercontent.com/TrAXzHJ/roblox-scripts/refs/heads/main/Custom%20BTools.lua"))()
   	end    
 })
 FunSection:AddToggle({
