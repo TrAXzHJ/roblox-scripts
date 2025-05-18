@@ -54,7 +54,7 @@ local function extend_hitboxes()
 			if player_humanoid.Health < 1 then remove_hitbox(enemyPly) continue end
 
 			player_humanoid_root_part.Size = Vector3.new(HBE_size.X,HBE_size.Y,HBE_size.Z)
-			player_humanoid_root_part.Transparency = HBE_transparency
+			player_humanoid_root_part.Transparency = tonumber(HBE_transparency)
 			player_humanoid_root_part.BrickColor = enemyPly.TeamColor
 			player_humanoid_root_part.Shape = HBE_shape
 			player_humanoid_root_part.CanCollide = true
